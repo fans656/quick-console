@@ -2,6 +2,8 @@ quick-console
 =============
 # 全局快捷控制台
 
+![Screenshot](https://raw.githubusercontent.com/fans656/image-hosting/master/20140819201216.png)
+
 按 Ctrl-; 呼出，键入自定义的命令，可以执行类似以下任务：
 - 打开某个网页
 - 启动某个程序
