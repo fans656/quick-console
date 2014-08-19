@@ -18,3 +18,4 @@ quick-console
 # Environment
 - Python2.7.8
 - PySide1.2.2
+- pyHook
