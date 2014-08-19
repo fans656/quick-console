@@ -6,6 +6,7 @@ class Event:
             #'time',
             'id',
             'autorepeat',
+            'char',
             )
 
     def __init__(self, **kwas):
@@ -13,8 +14,8 @@ class Event:
         self.__dict__.update(kwas)
 
     def __repr__(self):
-        d = {name: getattr(self, name) for name in Event.ATTR_NAMES}
-        return str(d)
+        ch = self.char if self.down else self.char + '^'
+        return '{:<2}'.format(ch)
 
 class Sequence(unicode):
 
@@ -26,10 +27,34 @@ class Sequence(unicode):
         seq = cls.normalized(seq)
         return unicode.__new__(cls, seq)
 
-class TrigerPool:
+class Trigger:
+    def __init__(self, seq, *callbacks):
+        if isinstance(seq, unicode):
+            seq = Sequence(seq)
+        self.callbacks = callbacks
 
-    def add(self, seq, callback):
+class TriggerPool:
+
+    def __init__(self):
+        self.eventFilters = []
+        from collections import deque
+        self.queue = deque()
+
+    def addEventFilter(self, eventFilter):
+        self.eventFilters.append(eventFilter)
+
+    def addTrigger(self, trigger):
         pass
 
     def notify(self, event):
-        print event
+        if all(f(event) for f in self.eventFilters):
+            self.notified(event)
+
+    def notified(self, event):
+        ch = event.char
+        if event.down:
+            self.queue.append(ch)
+        else:
+            if ch != self.queue.popleft():
+                print 'fifo not satisfied'
+        print list(self.queue)

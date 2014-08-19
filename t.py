@@ -8,10 +8,13 @@ from PySide.QtGui import *
 from GlobalKeyListener import GlobalKeyListener
 import key
 
-seq = key.Sequence('Ctrl+;')
+trigPool = key.TriggerPool()
+trigPool.addEventFilter(lambda e: not e.autorepeat)
 
-listener = GlobalKeyListener()
-listener.addKeySequence(seq, lambda: None)
+trig = key.Trigger('Ctrl+;', lambda: None)
+
+listener = GlobalKeyListener(trigPool)
+listener.addTrigger(trig)
 listener.start()
 
 app = QApplication(sys.argv)
