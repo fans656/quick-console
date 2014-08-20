@@ -1,0 +1,48 @@
+# Types of key sequence
+
+There are several user point of view of key sequence:
+
+- type in
+    bring out the console, type in a command which consists of
+    a series of characters, then press <enter> to execute the
+    command
+    (see below for an explanation for the keySeq after the "->")
+
+    e.g. "yx" -> "{yx}<enter>$<enter>^"
+
+- Ctrl modifier
+    press "Ctrl + ;" to bring out the console, then release ";"
+    while holding the Ctrl pressed, press a series of keys,
+    when the series of keys match a predefined pattern, the
+    command begin to execute and the console vanish
+
+    e.g. "Ctrl+d" -> "<ctrl>d$d^<ctrl>^"
+         "Ctrl+pi" -> "<ctrl>{pi}"
+
+- char modifier
+    bring out the console, then use a normal key such as "A"
+    as a modifier and then type "J".
+    This is just like the Ctrl modifier except that the modifier
+    is not a traditional MODIFIER
+
+    e.g. "a+j"
+
+# Normalized key sequence
+
+- key down
+    "ab" -> "a down b down"
+    char literal represents the key press which generate the char
+    (case insensitive)
+
+- key up
+    "aa^" -> "a down a up"
+    char literal append with a "^" represents the key release of
+    which generate that char
+
+- special key
+    "<ctrl>"
+    name enclosed in pair of "<>" represents special key
+
+- callback position
+    "$" is a place holder for a function to be called when that
+    specific position is reached
