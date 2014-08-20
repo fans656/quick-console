@@ -21,7 +21,7 @@ class GlobalKeyListener:
 
     def onKey(self, event):
         e = key.Event()
-        e.char = event.Key
+        e.name = event.Key
         e.time = event.Time
         e.id = event.KeyID
         e.down = event.Message in KEY_DOWN_MSGS

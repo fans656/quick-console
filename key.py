@@ -1,3 +1,5 @@
+import util
+
 class Event:
 
     ATTR_NAMES = (
@@ -6,7 +8,7 @@ class Event:
             #'time',
             'id',
             'autorepeat',
-            'char',
+            'name',
             )
 
     def __init__(self, **kwas):
@@ -16,6 +18,19 @@ class Event:
     def __repr__(self):
         ch = self.char if self.down else self.char + '^'
         return '{:<2}'.format(ch)
+
+class Hit:
+
+    def __init__(self, key, modifiees):
+        self.key = key
+        self.modifiees = modifiees
+
+    def __repr__(self):
+        if self.modifiees:
+            modifiees = ''.join(str(key) for key in self.modifiees)
+            return '{}({})'.format(self.key, modifiees)
+        else:
+            return self.key
 
 class Sequence(unicode):
 
@@ -37,8 +52,8 @@ class TriggerPool:
 
     def __init__(self):
         self.eventFilters = []
-        from collections import deque
-        self.queue = deque()
+        self.undet = []
+        self.det = []
 
     def addEventFilter(self, eventFilter):
         self.eventFilters.append(eventFilter)
@@ -51,10 +66,29 @@ class TriggerPool:
             self.notified(event)
 
     def notified(self, event):
-        ch = event.char
-        if event.down:
-            self.queue.append(ch)
+        self.parse(event)
+        self.isp()
+
+    def parse(self, e):
+
+        def takeModifiees(index):
+            isHit = lambda key: isinstance(key, Hit)
+            modifiees, self.undet[index:] = util.split(self.undet[index:], isHit)
+            return modifiees
+
+        c = e.name
+        if e.down:
+            self.undet.append(c)
         else:
-            if ch != self.queue.popleft():
-                print 'fifo not satisfied'
-        print list(self.queue)
+            index = self.undet.index(c)
+            modifiees = takeModifiees(index + 1)
+            self.undet[index] = Hit(c, modifiees)
+            if index == 0:
+                hit = self.undet[0]
+                del self.undet[0]
+                self.det.append(hit)
+
+    def isp(self):
+        print self.undet
+        print self.det
+        print
