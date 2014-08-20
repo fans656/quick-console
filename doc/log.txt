@@ -1,0 +1,106 @@
+20140730 10:02
+[updated on 20140730 14:30]
+尝试写QC了，主要是 chrome 的地址栏打开历史url太麻烦
+
+http://millionreasonstoflyhigh.blogspot.com/2013/07/basic-keylogger-with-python-on-ms.html
+Keylogger
+
+http://timgolden.me.uk/python/win32_how_do_i/catch_system_wide_hotkeys.html
+System-wide hotkeys (win32con.VK_F3)
+[updated on 20140730 14:30]
+尝试了system-wide hotkeys ，但 ctrl-; 没用，好像是指定错了，';'的KeyID不是ASCII值
+
+20140730 14:02
+http://www.expobrain.net/2011/02/22/handling-win32-windows-handler-in-pyside/
+PySide QWidget().effectiveWinId() -> HWND
+[updated on 20140730 14:30]
+想办法用 winapi ，但 pyside 里无法直接得到HWND，这里用 ctypes 做转换
+
+http://qt-project.org/forums/viewthread/1971
+SetWindowPos()  to be topmost (but can't steal focus)
+[updated on 20140730 14:30]
+能显示窗口了（topmost）（而不是在 taskbar 一闪一闪），但无法获得 focus （active window）
+
+20140730 14:30
+http://stackoverflow.com/a/11731385
+self.show()
+self.SetWindowState(Qt.Minimized)
+self.SetWindowState(Qt.ActiveWindow)
+以上三行完美解决 topmost + active
+
+下来尝试把窗口做的漂亮些——不要边框+半透明
+
+20140730 15:03
+QWidget(parent, Qt.FramelessWindowHint)  # 无边框
+self.setAttribute(Qt.WA_TranslucentBackground)  # 透明
+
+20140730 18:06
+实现了 text-mode 命令（输入字符串后回车）
+
+20140731 10:27
+self.setWindowFlags(self.windowFlags() | Qt.Tool)
+实现隐藏 taskbar icon
+
+刚发现 cmd-mode 需要做 backspace 删除字符的操作
+另外，昨晚上在那琢磨，意识到快捷键有两种：
+1) 系统快捷键那种——检测的是某一时刻是否存在数个同时按下的按键组合（比如 Ctrl-E 检测的是 E 按下时是否 Ctrl 按下且 Shift 和 Alt 未按下——至于其他的普通键比如 A 是否按下并不影响，，这个实在 Lingoes 里实现出来的）
+2) 普通键作为 modifier —— 比如 AB{B}{A} （A down B down A up B up）检测的是一个时间段内的按键序列
+
+20140801 15:13
+想做这么一个功能：在 Explorer 中选择一个文件，呼出 QC，然后某些快捷键和命令后，这个文件被重命名为比如 201408011515_createList.txt
+google 了下没找到立即能用的办法，但思路可能差不多是 Windows 的 COM
+http://blogs.msdn.com/b/oldnewthing/archive/2013/04/22/10412906.aspx
+http://stackoverflow.com/questions/1065844/what-can-you-do-with-com-activex-in-python
+
+20140805 11:15:12
+http://stackoverflow.com/questions/23706565/win32clipboard-setclipboardtext-doesnt-work
+win32clipboard
+需要先 EmptyClipboard 一下
+
+20140808 11:13:00
+http://win32com.goermezer.de/content/view/287/284/
+http://msdn.microsoft.com/en-us/library/windows/desktop/aa752084(v=vs.85).aspx
+获得当前 Explorer 所选文件
+
+20140818 12:43:38
+待添加功能：
+
+执行 python 脚本
+    方便地更改文件位置
+    指定 working directory
+
+添加便笺
+    多便笺
+    历史记录
+
+Ctrl hotkey
+    命中后自动关闭 console （相对于 键入式命令需要回车后才关闭）
+
+命令参数
+    在当前位置新建文件
+        无参数时默认新建最常用文件（autosuggestion 中的默认项）
+
+在当前位置打开 cmd.exe
+
+Put to clipboard
+
+将剪贴板中的图片保存为文件
+    并上传至 github + URL 放入剪贴板
+
+[update on 20140819 19:14:57]
+context switch
+    根据当前窗口内容进行 alt-tab 式切换
+    比如 Ctrl+<num> 在几个 vim 窗口间切换，或 chrome 实例间切换
+        用户可以临时定义 <num> 代表的窗口
+
+20140819 21:37:01
+typein cmd 的按键序列不一定满足 a down a up b down b up 这样的规则：
+如果我打得很快，可能出现 a down b down a up b up 这样的序列
+但是，它一定满足 FIFO 原则，即如果 keydown 时把 key 放进一个 queue 里，keyup 时一定取出相同的 key
+
+20140821 07:30:37
+对于 key sequence 的类型，应该提出几个实际的例子进行测试
+比如昨天就发现用于呼出控制台的全局快捷键 Ctrl-; 不同于自己定义的 enclosing modifier，
+如果打得快就会出现：
+    <ctrl>;<ctrl>^;^
+但这种组合键的真正(主要)语义是：modifiee 按下时，modifier 一定处于按下状态
