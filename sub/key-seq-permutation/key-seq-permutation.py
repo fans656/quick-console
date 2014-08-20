@@ -58,7 +58,13 @@ def segmentGraph(seq):
 
 def parse(seq):
 
-    class Key:
+    class Hit:
+        """
+        A Hit is a key press/release pair which may contains other hits
+        as its modifiees.
+        For example, in 'abBA' -> 'a(b)', 'a' is a hit and '(b)' is it's
+        modifiees, which means press b(modifiee) while holding a(modifier).
+        """
 
         def __init__(self, key, modifiees):
             self.key = key
@@ -72,43 +78,39 @@ def parse(seq):
                 return self.key
 
     def getModifiees(a, index):
-        modifiees, a[index:] = split(a[index:], lambda key: isinstance(key, Key))
+        modifiees, a[index:] = split(a[index:], lambda key: isinstance(key, Hit))
         return modifiees
 
-    def isp():
-        print 'q:    {}'.format(q)
-        print 'keys: {}'.format(keys)
-        print
-
-    q = []
-    keys = []
+    # undet store the partial key sequence which's meaning is undetermined
+    # det store the partial key sequence which's meaning is determined
+    # 
+    # Fetch one key press/release at a time:
+    # - If it's a press, just put into the undet queue;
+    # - It it's a release, we take (remove from undet) every finished hit
+    #   between this hit as its modifiees, and replace the previous key
+    #   press with this key hit.
+    #   If this hit is at the begining of the undet queue, then we'll be sure
+    #   that no other key could modify it. So we take it from undet and put
+    #   into det.
+    undet = []
+    det = []
     for c in seq:
         if c.islower():
-            #print '{} down'.format(c)
-            q.append(c)
-            #isp()
+            undet.append(c)
         else:
-            #print '{} up'.format(c)
             down = c.lower()
-            index = q.index(down)
-            modifiees = getModifiees(q, index + 1)
-            q[index] = Key(down, modifiees)
+            index = undet.index(down)
+            modifiees = getModifiees(undet, index + 1)
+            undet[index] = Hit(down, modifiees)
             if index == 0:
-                key = q[0]
-                del q[0]
-                keys.append(key)
-                #isp()
-                #continue
-            #isp()
-    return ''.join(str(key) for key in keys)
+                key = undet[0]
+                del undet[0]
+                det.append(key)
+    return ''.join(str(key) for key in det)
 
 def printParse(keys):
     seqs = list(validSeqs(keys))
     for i, seq in enumerate(seqs):
-        #if not (0 <= i):
-        #    continue
-        #print i
-        #print seq
         print '{} -> {}'.format(seq, parse(seq))
         print segmentGraph(seq)
         print
