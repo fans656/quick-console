@@ -27,6 +27,7 @@ class GlobalKeyListener:
         e.down = event.Message in KEY_DOWN_MSGS
         e.up = not e.down
         e.autorepeat = e.down and e.id in self.downKeys
+        e.normalize()
 
         if e.down:
             self.downKeys.add(e.id)
