@@ -104,3 +104,10 @@ typein cmd 的按键序列不一定满足 a down a up b down b up 这样的规�
 如果打得快就会出现：
     <ctrl>;<ctrl>^;^
 但这种组合键的真正(主要)语义是：modifiee 按下时，modifier 一定处于按下状态
+
+20140821 08:54:37
+接下来的工作：
+    1. 写一个 raw-key-seq-logger
+    2. 提出一些实际例子，观察它们的 raw-key-seq
+    3. 抽象出几类正交的解析模式
+    4. 设计解析器
