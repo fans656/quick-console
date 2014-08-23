@@ -1,0 +1,19 @@
+特殊快捷键，包括：
+    normal key modifier (e.g. aj{j}{a} -> a down j down j up a up)
+    ctrl modifier (e.g. Ctrl-;d -> Ctrl down ; down ; up d down d up)
+
+命令参数 (e.g. new t.py -> 在当前 explorer 新建 t.py 文件)
+
+web search (包括 google, wiki, stackoverflow 等，支持 suggestion)
+
+intellisense (弹出选项使用快捷键选择，比如 jkl;)
+
+在当前位置打开 cmd
+
+    @e:
+    @cd E:\Prog
+    @start
+    
+    http://win32com.goermezer.de/content/view/287/284/
+
+    记录启动 console 前的 active window
