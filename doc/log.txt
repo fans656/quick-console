@@ -111,3 +111,11 @@ typein cmd 的按键序列不一定满足 a down a up b down b up 这样的规�
     2. 提出一些实际例子，观察它们的 raw-key-seq
     3. 抽象出几类正交的解析模式
     4. 设计解析器
+
+20140821 14:30:23
+目前辨认出的 key-seq-types
+    1. enclosing-modifier
+        a down (seq) a up
+    2. type-in
+    3. holding-modifier
+        a down b down [ab] up
