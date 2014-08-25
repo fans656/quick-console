@@ -74,7 +74,7 @@ class Widget(QWidget):
       copyToClipboard(curDatetime('%Y%m%d%H%M%S'))
     # date time in readable format
     elif cmd == 'd ':
-      copyToClipboard(curDatetime('%Y%m%d %H:%M:%S'))
+      copyToClipboard(curDatetime('%Y-%m-%d %H:%M:%S'))
     # new file (create a new file in the current directory)
     # ¡¾¡¿not inplemented
     elif cmd.startswith('new'):
