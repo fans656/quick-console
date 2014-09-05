@@ -1,0 +1,75 @@
+aAbBcC -> abc
+aa
+  bb
+    cc
+
+aAbcBC -> abc
+aa
+  b_b
+   c_c
+
+aAbcCB -> ab(c)
+aa
+  b__b
+   cc
+
+abABcC -> abc
+a_a
+ b_b
+    cc
+
+abAcBC -> abc
+a_a
+ b__b
+   c_c
+
+abAcCB -> ab(c)
+a_a
+ b___b
+   cc
+
+abBAcC -> a(b)c
+a__a
+ bb
+    cc
+
+abBcAC -> a(b)c
+a___a
+ bb
+   c_c
+
+abBcCA -> a(bc)
+a____a
+ bb
+   cc
+
+abcABC -> abc
+a__a
+ b__b
+  c__c
+
+abcACB -> ab(c)
+a__a
+ b___b
+  c_c
+
+abcBAC -> a(b)c
+a___a
+ b_b
+  c__c
+
+abcBCA -> a(bc)
+a____a
+ b_b
+  c_c
+
+abcCAB -> a(c)b
+a___a
+ b___b
+  cc
+
+abcCBA -> a(b(c))
+a____a
+ b__b
+  cc
+

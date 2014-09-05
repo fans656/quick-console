@@ -1,0 +1,630 @@
+aAbBcCdD -> abcd
+aa
+  bb
+    cc
+      dd
+
+aAbBcdCD -> abcd
+aa
+  bb
+    c_c
+     d_d
+
+aAbBcdDC -> abc(d)
+aa
+  bb
+    c__c
+     dd
+
+aAbcBCdD -> abcd
+aa
+  b_b
+   c_c
+      dd
+
+aAbcBdCD -> abcd
+aa
+  b_b
+   c__c
+     d_d
+
+aAbcBdDC -> abc(d)
+aa
+  b_b
+   c___c
+     dd
+
+aAbcCBdD -> ab(c)d
+aa
+  b__b
+   cc
+      dd
+
+aAbcCdBD -> ab(c)d
+aa
+  b___b
+   cc
+     d_d
+
+aAbcCdDB -> ab(cd)
+aa
+  b____b
+   cc
+     dd
+
+aAbcdBCD -> abcd
+aa
+  b__b
+   c__c
+    d__d
+
+aAbcdBDC -> abc(d)
+aa
+  b__b
+   c___c
+    d_d
+
+aAbcdCBD -> ab(c)d
+aa
+  b___b
+   c_c
+    d__d
+
+aAbcdCDB -> ab(cd)
+aa
+  b____b
+   c_c
+    d_d
+
+aAbcdDBC -> ab(d)c
+aa
+  b___b
+   c___c
+    dd
+
+aAbcdDCB -> ab(c(d))
+aa
+  b____b
+   c__c
+    dd
+
+abABcCdD -> abcd
+a_a
+ b_b
+    cc
+      dd
+
+abABcdCD -> abcd
+a_a
+ b_b
+    c_c
+     d_d
+
+abABcdDC -> abc(d)
+a_a
+ b_b
+    c__c
+     dd
+
+abAcBCdD -> abcd
+a_a
+ b__b
+   c_c
+      dd
+
+abAcBdCD -> abcd
+a_a
+ b__b
+   c__c
+     d_d
+
+abAcBdDC -> abc(d)
+a_a
+ b__b
+   c___c
+     dd
+
+abAcCBdD -> ab(c)d
+a_a
+ b___b
+   cc
+      dd
+
+abAcCdBD -> ab(c)d
+a_a
+ b____b
+   cc
+     d_d
+
+abAcCdDB -> ab(cd)
+a_a
+ b_____b
+   cc
+     dd
+
+abAcdBCD -> abcd
+a_a
+ b___b
+   c__c
+    d__d
+
+abAcdBDC -> abc(d)
+a_a
+ b___b
+   c___c
+    d_d
+
+abAcdCBD -> ab(c)d
+a_a
+ b____b
+   c_c
+    d__d
+
+abAcdCDB -> ab(cd)
+a_a
+ b_____b
+   c_c
+    d_d
+
+abAcdDBC -> ab(d)c
+a_a
+ b____b
+   c___c
+    dd
+
+abAcdDCB -> ab(c(d))
+a_a
+ b_____b
+   c__c
+    dd
+
+abBAcCdD -> a(b)cd
+a__a
+ bb
+    cc
+      dd
+
+abBAcdCD -> a(b)cd
+a__a
+ bb
+    c_c
+     d_d
+
+abBAcdDC -> a(b)c(d)
+a__a
+ bb
+    c__c
+     dd
+
+abBcACdD -> a(b)cd
+a___a
+ bb
+   c_c
+      dd
+
+abBcAdCD -> a(b)cd
+a___a
+ bb
+   c__c
+     d_d
+
+abBcAdDC -> a(b)c(d)
+a___a
+ bb
+   c___c
+     dd
+
+abBcCAdD -> a(bc)d
+a____a
+ bb
+   cc
+      dd
+
+abBcCdAD -> a(bc)d
+a_____a
+ bb
+   cc
+     d_d
+
+abBcCdDA -> a(bcd)
+a______a
+ bb
+   cc
+     dd
+
+abBcdACD -> a(b)cd
+a____a
+ bb
+   c__c
+    d__d
+
+abBcdADC -> a(b)c(d)
+a____a
+ bb
+   c___c
+    d_d
+
+abBcdCAD -> a(bc)d
+a_____a
+ bb
+   c_c
+    d__d
+
+abBcdCDA -> a(bcd)
+a______a
+ bb
+   c_c
+    d_d
+
+abBcdDAC -> a(bd)c
+a_____a
+ bb
+   c___c
+    dd
+
+abBcdDCA -> a(bc(d))
+a______a
+ bb
+   c__c
+    dd
+
+abcABCdD -> abcd
+a__a
+ b__b
+  c__c
+      dd
+
+abcABdCD -> abcd
+a__a
+ b__b
+  c___c
+     d_d
+
+abcABdDC -> abc(d)
+a__a
+ b__b
+  c____c
+     dd
+
+abcACBdD -> ab(c)d
+a__a
+ b___b
+  c_c
+      dd
+
+abcACdBD -> ab(c)d
+a__a
+ b____b
+  c_c
+     d_d
+
+abcACdDB -> ab(cd)
+a__a
+ b_____b
+  c_c
+     dd
+
+abcAdBCD -> abcd
+a__a
+ b___b
+  c___c
+    d__d
+
+abcAdBDC -> abc(d)
+a__a
+ b___b
+  c____c
+    d_d
+
+abcAdCBD -> ab(c)d
+a__a
+ b____b
+  c__c
+    d__d
+
+abcAdCDB -> ab(cd)
+a__a
+ b_____b
+  c__c
+    d_d
+
+abcAdDBC -> ab(d)c
+a__a
+ b____b
+  c____c
+    dd
+
+abcAdDCB -> ab(c(d))
+a__a
+ b_____b
+  c___c
+    dd
+
+abcBACdD -> a(b)cd
+a___a
+ b_b
+  c__c
+      dd
+
+abcBAdCD -> a(b)cd
+a___a
+ b_b
+  c___c
+     d_d
+
+abcBAdDC -> a(b)c(d)
+a___a
+ b_b
+  c____c
+     dd
+
+abcBCAdD -> a(bc)d
+a____a
+ b_b
+  c_c
+      dd
+
+abcBCdAD -> a(bc)d
+a_____a
+ b_b
+  c_c
+     d_d
+
+abcBCdDA -> a(bcd)
+a______a
+ b_b
+  c_c
+     dd
+
+abcBdACD -> a(b)cd
+a____a
+ b_b
+  c___c
+    d__d
+
+abcBdADC -> a(b)c(d)
+a____a
+ b_b
+  c____c
+    d_d
+
+abcBdCAD -> a(bc)d
+a_____a
+ b_b
+  c__c
+    d__d
+
+abcBdCDA -> a(bcd)
+a______a
+ b_b
+  c__c
+    d_d
+
+abcBdDAC -> a(bd)c
+a_____a
+ b_b
+  c____c
+    dd
+
+abcBdDCA -> a(bc(d))
+a______a
+ b_b
+  c___c
+    dd
+
+abcCABdD -> a(c)bd
+a___a
+ b___b
+  cc
+      dd
+
+abcCAdBD -> a(c)bd
+a___a
+ b____b
+  cc
+     d_d
+
+abcCAdDB -> a(c)b(d)
+a___a
+ b_____b
+  cc
+     dd
+
+abcCBAdD -> a(b(c))d
+a____a
+ b__b
+  cc
+      dd
+
+abcCBdAD -> a(b(c))d
+a_____a
+ b__b
+  cc
+     d_d
+
+abcCBdDA -> a(b(c)d)
+a______a
+ b__b
+  cc
+     dd
+
+abcCdABD -> a(c)bd
+a____a
+ b____b
+  cc
+    d__d
+
+abcCdADB -> a(c)b(d)
+a____a
+ b_____b
+  cc
+    d_d
+
+abcCdBAD -> a(b(c))d
+a_____a
+ b___b
+  cc
+    d__d
+
+abcCdBDA -> a(b(c)d)
+a______a
+ b___b
+  cc
+    d_d
+
+abcCdDAB -> a(cd)b
+a_____a
+ b_____b
+  cc
+    dd
+
+abcCdDBA -> a(b(cd))
+a______a
+ b____b
+  cc
+    dd
+
+abcdABCD -> abcd
+a___a
+ b___b
+  c___c
+   d___d
+
+abcdABDC -> abc(d)
+a___a
+ b___b
+  c____c
+   d__d
+
+abcdACBD -> ab(c)d
+a___a
+ b____b
+  c__c
+   d___d
+
+abcdACDB -> ab(cd)
+a___a
+ b_____b
+  c__c
+   d__d
+
+abcdADBC -> ab(d)c
+a___a
+ b____b
+  c____c
+   d_d
+
+abcdADCB -> ab(c(d))
+a___a
+ b_____b
+  c___c
+   d_d
+
+abcdBACD -> a(b)cd
+a____a
+ b__b
+  c___c
+   d___d
+
+abcdBADC -> a(b)c(d)
+a____a
+ b__b
+  c____c
+   d__d
+
+abcdBCAD -> a(bc)d
+a_____a
+ b__b
+  c__c
+   d___d
+
+abcdBCDA -> a(bcd)
+a______a
+ b__b
+  c__c
+   d__d
+
+abcdBDAC -> a(bd)c
+a_____a
+ b__b
+  c____c
+   d_d
+
+abcdBDCA -> a(bc(d))
+a______a
+ b__b
+  c___c
+   d_d
+
+abcdCABD -> a(c)bd
+a____a
+ b____b
+  c_c
+   d___d
+
+abcdCADB -> a(c)b(d)
+a____a
+ b_____b
+  c_c
+   d__d
+
+abcdCBAD -> a(b(c))d
+a_____a
+ b___b
+  c_c
+   d___d
+
+abcdCBDA -> a(b(c)d)
+a______a
+ b___b
+  c_c
+   d__d
+
+abcdCDAB -> a(cd)b
+a_____a
+ b_____b
+  c_c
+   d_d
+
+abcdCDBA -> a(b(cd))
+a______a
+ b____b
+  c_c
+   d_d
+
+abcdDABC -> a(d)bc
+a____a
+ b____b
+  c____c
+   dd
+
+abcdDACB -> a(d)b(c)
+a____a
+ b_____b
+  c___c
+   dd
+
+abcdDBAC -> a(b(d))c
+a_____a
+ b___b
+  c____c
+   dd
+
+abcdDBCA -> a(b(d)c)
+a______a
+ b___b
+  c___c
+   dd
+
+abcdDCAB -> a(c(d))b
+a_____a
+ b_____b
+  c__c
+   dd
+
+abcdDCBA -> a(b(c(d)))
+a______a
+ b____b
+  c__c
+   dd
+

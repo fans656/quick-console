@@ -1,0 +1,12 @@
+aAbB -> ab
+aa
+  bb
+
+abAB -> ab
+a_a
+ b_b
+
+abBA -> a(b)
+a__a
+ bb
+
