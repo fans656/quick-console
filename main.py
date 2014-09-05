@@ -66,7 +66,7 @@ class Widget(QWidget):
         cmd = self.text[1:]
         # yinxiang
         if cmd == 'yx':
-            command('"C:/Program Files (x86)/Google/Chrome/Application/chrome.exe" "https://app.yinxiang.com/Home.action"')
+            command('start chrome "https://app.yinxiang.com/Home.action"')
         # math
         elif cmd == 'ma':
             command('"E:\\Depot\\Subject\\201405161208\\PostGraduate\\301\\bk\\A1.pdf"')

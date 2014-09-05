@@ -10,9 +10,7 @@ intellisense (弹出选项使用快捷键选择，比如 jkl;)
 
 在当前位置打开 cmd
 
-    @e:
-    @cd E:\Prog
-    @start
+    @start cmd /k cd /d E:\Prog
     
     http://win32com.goermezer.de/content/view/287/284/
 
