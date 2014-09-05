@@ -119,3 +119,12 @@ typein cmd 的按键序列不一定满足 a down a up b down b up 这样的规�
     2. type-in
     3. holding-modifier
         a down b down [ab] up
+
+2014-08-26 10:28:34
+针对某个程序窜改键盘输入
+
+    http://msdn.microsoft.com/en-us/library/windows/desktop/ms644977%28v=vs.85%29.aspx
+    detect active window change (CBTProc hook)
+
+    http://msdn.microsoft.com/en-us/library/windows/desktop/ms646310(v=vs.85).aspx
+    simulate keyboard input (SendInput)
