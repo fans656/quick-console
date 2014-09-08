@@ -8,6 +8,7 @@ import win32gui
 import win32clipboard
 import threading
 import sys
+import time
 import subprocess
 import datetime
 from PySide.QtGui import *
@@ -42,39 +43,44 @@ class Widget(QWidget):
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setWindowFlags(self.windowFlags() | Qt.Tool)
         self.resize(300, 30)
-        self.text = ''
+        self.cmd = []
+        self.cmds = ['yx', '!quit', 'd', 'd ', 'cmd',
+                ]
+        self.cmds += os.listdir('D:/Hotkeys')
 
     def keyPressEvent(self, event):
         ch = event.text()
-        if ch == '\r' or ch == '\n':
-            self.execute()
+        if ch == '\b':
+            self.cmd.pop()
         else:
-            self.text += ch
+            self.cmd.append(ch)
             self.update()
-        self.showKeyEvent(event)
-
-    def keyReleaseEvent(self, event):
-        ch = event.text()
-        self.showKeyEvent(event)
-
-    def showKeyEvent(self, event):
-        attrs = {
-                'count'}
+        if self.matched() or ch and ch in '\r\n':
+            self.execute()
+        
+    def matched(self):
+        matches = []
+        text = self.text()
+        for cmd in self.cmds:
+            if cmd.startswith('!') and cmd[1:] == text:
+                matches.append(text)
+            elif cmd.startswith(text):
+                matches.append(cmd)
+        if len(matches) == 1:
+            self.cmd = ';' + matches[0]
+            return True
+        else:
+            return False
+        
+    def text(self):
+        # eliminate initial semicolon
+        return ''.join(self.cmd)[1:]
 
     def execute(self):
-        cmd = self.text[1:]
+        cmd = self.text()
         # yinxiang
         if cmd == 'yx':
             command('start chrome "https://app.yinxiang.com/Home.action"')
-        # math
-        elif cmd == 'ma':
-            command('"E:\\Depot\\Subject\\201405161208\\PostGraduate\\301\\bk\\A1.pdf"')
-        # post graduate
-        elif cmd == 'pg':
-            command('explorer "E:\\Depot\\Subject\\201405161208\\PostGraduate"')
-        # study time
-        elif cmd == 'st':
-            command('start pythonw "E:/Prog/Python/201407272013_studyTime.py"')
         # date time in filename format
         elif cmd == 'd':
             copyToClipboard(curDatetime('%Y%m%d%H%M%S'))
@@ -92,12 +98,13 @@ class Widget(QWidget):
         # quit
         elif cmd == 'quit':
             exit()
+        # execute in hotkeys directory
         else:
-            command('start {}'.format(cmd))
+            command('start /b {}'.format(cmd))
         self.clear()
 
     def clear(self):
-        self.text = ''
+        self.cmd = []
         self.hide()
 
     def paintEvent(self, event):
@@ -114,7 +121,7 @@ class Widget(QWidget):
         pen = p.pen()
         pen.setColor(QColor(200,200,200))
         p.setPen(pen)
-        p.drawText(self.rect(), Qt.AlignCenter, self.text[1:])
+        p.drawText(self.rect(), Qt.AlignCenter, self.text())
 
 class KeyListener:
     def __init__(self, window):
@@ -136,8 +143,7 @@ class KeyListener:
         elif self.isKey(VK_SEMICOLON) and self.lctrldown:
             if self.isDown():
                 if self.window.isVisible():
-                    self.window.hide()
-                    self.window.text = ''
+                    self.window.clear()
                 else:
                     self.window.show()
                     self.window.setWindowState(Qt.WindowMinimized)
