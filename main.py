@@ -46,8 +46,7 @@ class Widget(QWidget):
 
     def keyPressEvent(self, event):
         ch = event.text()
-        print ch
-        if ch == '\r':
+        if ch == '\r' or ch == '\n':
             self.execute()
         else:
             self.text += ch
