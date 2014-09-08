@@ -44,19 +44,29 @@ class Widget(QWidget):
         self.setWindowFlags(self.windowFlags() | Qt.Tool)
         self.resize(300, 30)
         self.cmd = []
-        self.cmds = ['yx', '!quit', 'd', 'd ', 'cmd',
+        self.cmds = ['!yx', '!quit', 'dt', 'dh', 'cmd',
                 ]
-        self.cmds += os.listdir('D:/Hotkeys')
+        self.cmds += [f.split('.')[0] for f in os.listdir('D:/Hotkeys')]
+        print self.cmds
 
     def keyPressEvent(self, event):
         ch = event.text()
+        # ignore ctrl-; (although this will ignore all ;)
+        if not ch or ch ==';':
+            return
+        # backspace
         if ch == '\b':
-            self.cmd.pop()
+            if self.cmd:
+                self.cmd.pop()
+                self.update()
+        elif ch and ch in '\r\n':
+            if self.text() in self.cmds:
+                self.execute()
         else:
             self.cmd.append(ch)
             self.update()
-        if self.matched() or ch and ch in '\r\n':
-            self.execute()
+            if self.matched():
+                self.execute()
         
     def matched(self):
         matches = []
@@ -66,26 +76,29 @@ class Widget(QWidget):
                 matches.append(text)
             elif cmd.startswith(text):
                 matches.append(cmd)
-        if len(matches) == 1:
-            self.cmd = ';' + matches[0]
+        if len(matches) == 1 and text == matches[0]:
+            self.cmd = matches[0]
+            print 'single match:', self.cmd, matches
             return True
         else:
+            print 'no match: ', self.cmd, matches
             return False
         
     def text(self):
         # eliminate initial semicolon
-        return ''.join(self.cmd)[1:]
+        return ''.join(self.cmd)
 
     def execute(self):
         cmd = self.text()
+        print cmd
         # yinxiang
         if cmd == 'yx':
             command('start chrome "https://app.yinxiang.com/Home.action"')
         # date time in filename format
-        elif cmd == 'd':
+        elif cmd == 'dt':
             copyToClipboard(curDatetime('%Y%m%d%H%M%S'))
         # date time in readable format
-        elif cmd == 'd ':
+        elif cmd == 'dh':
             copyToClipboard(curDatetime('%Y-%m-%d %H:%M:%S'))
         # open cmd in clipboard
         elif cmd == 'cmd':
@@ -99,8 +112,8 @@ class Widget(QWidget):
         elif cmd == 'quit':
             exit()
         # execute in hotkeys directory
-        else:
-            command('start /b {}'.format(cmd))
+        elif self.text() in self.cmds:
+            command('cd /d D:/Hotkeys & start /b {}'.format(cmd))
         self.clear()
 
     def clear(self):
