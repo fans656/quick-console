@@ -93,6 +93,8 @@ class Widget(QWidget):
         # quit
         elif cmd == 'quit':
             exit()
+        else:
+            command('start {}'.format(cmd))
         self.clear()
 
     def clear(self):
