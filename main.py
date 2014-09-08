@@ -44,10 +44,10 @@ class Widget(QWidget):
         self.setWindowFlags(self.windowFlags() | Qt.Tool)
         self.resize(300, 30)
         self.cmd = []
+        self.lastCmd = ''
         self.cmds = ['!yx', '!quit', 'dt', 'dh', 'cmd',
                 ]
         self.cmds += [f.split('.')[0] for f in os.listdir('D:/Hotkeys')]
-        print self.cmds
 
     def keyPressEvent(self, event):
         ch = event.text()
@@ -60,7 +60,8 @@ class Widget(QWidget):
                 self.cmd.pop()
                 self.update()
         elif ch and ch in '\r\n':
-            if self.text() in self.cmds:
+            text = self.text()
+            if not text or text in self.cmds:
                 self.execute()
         else:
             self.cmd.append(ch)
@@ -78,10 +79,8 @@ class Widget(QWidget):
                 matches.append(cmd)
         if len(matches) == 1 and text == matches[0]:
             self.cmd = matches[0]
-            print 'single match:', self.cmd, matches
             return True
         else:
-            print 'no match: ', self.cmd, matches
             return False
         
     def text(self):
@@ -90,7 +89,8 @@ class Widget(QWidget):
 
     def execute(self):
         cmd = self.text()
-        print cmd
+        if not cmd:
+            cmd = self.lastCmd
         # yinxiang
         if cmd == 'yx':
             command('start chrome "https://app.yinxiang.com/Home.action"')
@@ -112,11 +112,12 @@ class Widget(QWidget):
         elif cmd == 'quit':
             exit()
         # execute in hotkeys directory
-        elif self.text() in self.cmds:
+        elif cmd in self.cmds:
             command('cd /d D:/Hotkeys & start /b {}'.format(cmd))
         self.clear()
 
     def clear(self):
+        self.lastCmd = self.text()
         self.cmd = []
         self.hide()
 
