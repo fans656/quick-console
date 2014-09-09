@@ -113,11 +113,13 @@ class Widget(QWidget):
             exit()
         # execute in hotkeys directory
         elif cmd in self.cmds:
-            command('cd /d D:/Hotkeys & start /b {}'.format(cmd))
-        self.clear()
+            command('cd /d D:/Hotkeys & start /b .\{}'.format(cmd))
+        else:
+            return
+        self.clear(cmd)
 
-    def clear(self):
-        self.lastCmd = self.text()
+    def clear(self, cmd=''):
+        self.lastCmd = cmd
         self.cmd = []
         self.hide()
 
