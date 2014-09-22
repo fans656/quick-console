@@ -3,7 +3,7 @@ import time
 
 SendInput = ctypes.windll.user32.SendInput
 
-# C struct redefinitions 
+# C struct redefinitions
 PUL = ctypes.POINTER(ctypes.c_ulong)
 class KeyBdInput(ctypes.Structure):
     _fields_ = [("wVk", ctypes.c_ushort),
@@ -53,7 +53,7 @@ def ReleaseKey(hexKeyCode):
     SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 
-def AltTab():
+def alt_tab():
     '''
     Press Alt+Tab and hold Alt key for 2 seconds in order to see the overlay
     '''
@@ -61,10 +61,4 @@ def AltTab():
     PressKey(0x012) #Alt
     PressKey(0x09) #Tab
     ReleaseKey(0x09) #~Tab
-
-    time.sleep(2)       
     ReleaseKey(0x012) #~Alt
-
-if __name__ =="__main__":
-
-    AltTab()

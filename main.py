@@ -68,7 +68,7 @@ class Widget(QWidget):
             self.update()
             if self.matched():
                 self.execute()
-        
+
     def matched(self):
         matches = []
         text = self.text()
@@ -82,7 +82,7 @@ class Widget(QWidget):
             return True
         else:
             return False
-        
+
     def text(self):
         # eliminate initial semicolon
         return ''.join(self.cmd)
