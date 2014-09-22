@@ -17,7 +17,6 @@ class Listener(object):
 
     def __init__(self):
         self.keys = {}
-        self.keys_to_eat = set()
         self.saved_wnds = {}
 
     def parse(self, e):
@@ -36,8 +35,6 @@ class Listener(object):
 
     def on_key(self, e):
         self.parse(e)
-        if self.eat():
-            return False
         if self.is_key_down and self.is_autorepeat:
             return True
         # save current foreground window
@@ -54,6 +51,7 @@ class Listener(object):
             index = self.ch
             if self.valid_window(index):
                 keys_to_eat = [self.key_id, win32con.VK_LMENU, win32con.VK_LCONTROL]
+                keys_stats = [win32api.GetAsyncKeyState(key) & 0x8000 for key in keys_to_eat]
                 for key in keys_to_eat:
                     simulate.up(key)
                 if not self.bring_window_to_foreground(index):
@@ -64,15 +62,9 @@ class Listener(object):
                     simulate.tap(win32con.VK_TAB)
                     simulate.up(win32con.VK_LSHIFT)
                     simulate.up(win32con.VK_LMENU)
-                #self.keys_to_eat |= set(keys_to_eat)
-                for key in reversed(keys_to_eat[1:]):
-                    if win32api.GetAsyncKeyState(key):
-                        print '{} is still down'.format(
-                                pyHook.HookConstants.IDToName(key))
+                for key, stat in reversed(zip(keys_to_eat, keys_stats)):
+                    if stat:
                         simulate.down(key)
-                    else:
-                        print '{} is already up'.format(
-                                pyHook.HookConstants.IDToName(key))
         return True
 
     def valid_window(self, index):
@@ -96,12 +88,6 @@ class Listener(object):
             return self.keys[win32con.VK_LMENU] and self.keys[win32con.VK_LSHIFT]
         except KeyError:
             return False
-
-    def eat(self):
-        if self.is_key_up and self.key_id in self.keys_to_eat:
-            self.keys_to_eat.remove(self.key_id)
-            return False
-        return False
 
     def bring_window_to_foreground(self, index):
         wnd = self.valid_window(index)

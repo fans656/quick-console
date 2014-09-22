@@ -1,20 +1,21 @@
 # coding: utf-8
 # quick console
-import pyHook
 import os
 import re
-import win32con
-import win32gui
-import win32clipboard
 import threading
 import sys
 import time
 import subprocess
 import datetime
+from ctypes import pythonapi, c_void_p, py_object
+
+import pyHook
+import win32con
+import win32gui
+import win32api
+import win32clipboard
 from PySide.QtGui import *
 from PySide.QtCore import *
-
-from ctypes import pythonapi, c_void_p, py_object
 
 VK_SEMICOLON = 186
 
@@ -147,16 +148,10 @@ class KeyListener:
         self.hm = pyHook.HookManager()
         self.hm.KeyAll = self.onKey
         self.hm.HookKeyboard()
-        self.lctrldown = False
 
     def onKey(self, event):
         self.event = event
-        if self.isKey(win32con.VK_LCONTROL):
-            if self.isDown():
-                self.lctrldown = True
-            elif self.isUp():
-                self.lctrldown = False
-        elif self.isKey(VK_SEMICOLON) and self.lctrldown:
+        if self.isKey(VK_SEMICOLON) and win32api.GetKeyState(win32con.VK_LCONTROL) & 0x8000:
             if self.isDown():
                 if self.window.isVisible():
                     self.window.clear()
@@ -176,10 +171,10 @@ class KeyListener:
         return self.event.KeyID == key
 
     def isDown(self):
-        return self.event.Message == win32con.WM_KEYDOWN
+        return self.event.Message in (win32con.WM_KEYDOWN, win32con.WM_SYSKEYDOWN)
 
     def isUp(self):
-        return self.event.Message == win32con.WM_KEYUP
+        return self.event.Message in (win32con.WM_KEYUP, win32con.WM_SYSKEYUP)
 
 app = QApplication(sys.argv)
 w = Widget()
