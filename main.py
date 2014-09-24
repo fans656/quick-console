@@ -60,10 +60,16 @@ class Widget(QWidget):
             if self.cmd:
                 self.cmd.pop()
                 self.update()
+        # esc | ctrl-k
+        elif ch == '\x1b' or ch == '\x0b':
+            del self.cmd[:]
+            self.update()
+        # return | ctrl-j | ctrl-m
         elif ch and ch in '\r\n':
             text = self.text()
             if not text or text in self.cmds:
                 self.execute()
+        # normal char
         else:
             self.cmd.append(ch)
             self.update()
