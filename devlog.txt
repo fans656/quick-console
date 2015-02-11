@@ -7,3 +7,17 @@
 2014-09-22 16:07:13
 ctrl-alt-1/2/3/.. 切换到特定窗口stack：
 即哪个窗口active，这个最小化之后下一个active，下一个...
+[update on 2014-09-24 15:41:56]
+实现了，alt-shift-digit 记录，ctrl-alt-digit 切换
+
+2014-09-24 15:40:09
+键盘九宫格模拟鼠标移动
+
+2014-09-30 08:38:37
+有时候会开很多cmd.exe python.exe，查查是哪个动作导致的
+
+2014-10-17 08:38:57
+[window-switcher]
+可以用ctrl-windows切换到taskbar第一组窗口的第一个(以及第二组的第一个，etc)
+然后alt-tab n次到特定窗口(alt-shift-tab可以倒着数)
+于是 ctrl-alt-1..5 正数1到5号窗口， ctrl-alt-7..9.0 倒数的4个窗口

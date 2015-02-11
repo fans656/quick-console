@@ -46,7 +46,7 @@ class Widget(QWidget):
         self.resize(300, 30)
         self.cmd = []
         self.lastCmd = ''
-        self.cmds = ['!yx', '!quit', 'dt', 'dh', 'cmd',
+        self.cmds = ['!yx', '!quit', 'dt', 'dh', 'cmd', 'av'
                 ]
         self.cmds += [f.split('.')[0] for f in os.listdir('D:/Hotkeys')]
 
@@ -115,6 +115,9 @@ class Widget(QWidget):
             if os.path.isfile(path):
                 path = os.path.dirname(path)
             command('start cmd /k cd /d {}'.format(path))
+        # secret
+        elif cmd == 'av':
+            command('start pythonw rand_movie.py')
         # quit
         elif cmd == 'quit':
             exit()
