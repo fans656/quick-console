@@ -3,8 +3,7 @@ import random
 import subprocess
 
 paths = [
-        "E:\Movies\AV",
-        "D:\AV",
+        "D:\Movie\AV",
         ]
 exts = [
     'mpg', 'vob', '3gp', 'wmv', 'flv', 'mkv',
@@ -21,5 +20,5 @@ for path in paths:
         movies += [os.path.join(dirpath, f)
                 for f in filenames if is_movie(f)]
 movie = random.choice(movies)
-kmp = r"D:\Media\KMP\KMPlayer.exe"
+kmp = r"D:\Software\Media\PotPlayer\PotPlayerMini64.exe"
 subprocess.Popen([kmp, movie])
