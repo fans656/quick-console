@@ -18,6 +18,7 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 
 VK_SEMICOLON = 186
+hotkeys = 'D:/Depot/Private/Hotkeys'
 
 def copyToClipboard(s):
     win32clipboard.OpenClipboard()
@@ -27,7 +28,10 @@ def copyToClipboard(s):
 
 def getTextFromClipboard():
     win32clipboard.OpenClipboard()
-    text = win32clipboard.GetClipboardData()
+    try:
+        text = win32clipboard.GetClipboardData()
+    except TypeError:
+        text = ''
     win32clipboard.CloseClipboard()
     return text
 
@@ -48,7 +52,7 @@ class Widget(QWidget):
         self.lastCmd = ''
         self.cmds = ['!yx', '!quit', 'dt', 'dh', 'cmd', 'av'
                 ]
-        self.cmds += [f.split('.')[0] for f in os.listdir('D:/Hotkeys')]
+        self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
 
     def keyPressEvent(self, event):
         ch = event.text()
@@ -123,7 +127,7 @@ class Widget(QWidget):
             exit()
         # execute in hotkeys directory
         elif cmd in self.cmds:
-            command('cd /d D:/Hotkeys & start /b .\{}'.format(cmd))
+            command('cd /d ' + hotkeys + ' & start /b .\{}'.format(cmd))
         else:
             return
         self.clear(cmd)
