@@ -53,6 +53,8 @@ class Widget(QWidget):
         self.cmds = ['!yx', '!quit', 'dt', 'dh', 'cmd', 'av'
                 ]
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
+        print 'cmds: '
+        print self.cmds
 
     def keyPressEvent(self, event):
         ch = event.text()
@@ -79,6 +81,9 @@ class Widget(QWidget):
             self.update()
             if self.matched():
                 self.execute()
+            else:
+                print 'no match'
+        print 'current cmd: {}'.format(u''.join(self.cmd))
 
     def matched(self):
         matches = []
@@ -127,8 +132,10 @@ class Widget(QWidget):
             exit()
         # execute in hotkeys directory
         elif cmd in self.cmds:
+            print 'special cmds: ', hotkeys
             command('cd /d ' + hotkeys + ' & start /b .\{}'.format(cmd))
         else:
+            print 'oops'
             return
         self.clear(cmd)
 
