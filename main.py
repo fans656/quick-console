@@ -50,7 +50,7 @@ class Widget(QWidget):
         self.resize(300, 30)
         self.cmd = []
         self.lastCmd = ''
-        self.cmds = ['!yx', '!quit', 'dt', 'dh', 'cmd', 'av'
+        self.cmds = ['!yx', '!quit', 'dt', 'dh', 'cmd', 'av', 'put'
                 ]
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
         print 'cmds: '
@@ -104,6 +104,8 @@ class Widget(QWidget):
         return ''.join(self.cmd)
 
     def execute(self):
+        # hide quick-console window before cmd is executed
+        self.hide()
         cmd = self.text()
         if not cmd:
             cmd = self.lastCmd
@@ -127,6 +129,17 @@ class Widget(QWidget):
         # secret
         elif cmd == 'av':
             command('start pythonw rand_movie.py')
+        # put foreground window to right bottom
+        elif cmd == 'put':
+            import win32gui
+            availGeo = QApplication.desktop().availableGeometry()
+            right, bottom = availGeo.width(), availGeo.height()
+            hwnd = win32gui.GetForegroundWindow()
+            x, y, r, b = win32gui.GetWindowRect(hwnd)
+            w = r - x
+            h = b - y
+            x, y = right - w, bottom - h
+            win32gui.MoveWindow(hwnd, x, y, w, h, True)
         # quit
         elif cmd == 'quit':
             exit()
