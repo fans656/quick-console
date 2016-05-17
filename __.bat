@@ -1,0 +1,1 @@
+@start cmd /k cd /d D:\Source\Python\quick-console

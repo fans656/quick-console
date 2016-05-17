@@ -18,6 +18,6 @@ quick-console
 - intellisense (弹出选项使用快捷键选择，比如 jkl;)
 
 # Environment
-- Python2.7.8
-- PySide1.2.2
+- Python >= 2.7.8
+- PySide >= 1.2.2
 - pyHook

@@ -18,7 +18,7 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 
 VK_SEMICOLON = 186
-hotkeys = 'D:/Depot/Private/Hotkeys'
+hotkeys = 'D:/Private/Hotkeys'
 
 def copyToClipboard(s):
     win32clipboard.OpenClipboard()
@@ -40,7 +40,16 @@ def curDatetime(fmt=None):
     return t.strftime(fmt) if fmt else t
 
 def command(cmd):
-    subprocess.call(cmd, shell=True)
+    # write cmd to a bat file
+    # so to tackle the explorer hiding problem
+    # (when `start some_folder.lnk` the second time, the folder window will
+    # be hidden)
+    # shell=True to supress the cmd prompt flashing
+    fname = '__.bat'
+    f = open(fname, 'w')
+    f.write('@' + cmd)
+    f.close()
+    subprocess.call(fname, shell=True)
 
 class Widget(QWidget):
     def __init__(self, parent=None):
@@ -50,8 +59,10 @@ class Widget(QWidget):
         self.resize(300, 30)
         self.cmd = []
         self.lastCmd = ''
-        self.cmds = ['!yx', '!quit', 'dt', 'dh', 'cmd', 'av', 'put'
-                ]
+        self.cmds = [
+            '!yx', '!quit', 'dt', 'dh', 'cmd', 'av', 'put',
+            'rm'
+        ]
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
         print 'cmds: '
         print self.cmds
@@ -126,6 +137,9 @@ class Widget(QWidget):
             if os.path.isfile(path):
                 path = os.path.dirname(path)
             command('start cmd /k cd /d {}'.format(path))
+        # random music
+        elif cmd == 'rm':
+            command('start pythonw rand_music.py')
         # secret
         elif cmd == 'av':
             command('start pythonw rand_movie.py')
@@ -146,7 +160,10 @@ class Widget(QWidget):
         # execute in hotkeys directory
         elif cmd in self.cmds:
             print 'special cmds: ', hotkeys
-            command('cd /d ' + hotkeys + ' & start /b .\{}'.format(cmd))
+            print 'cmd:', cmd
+            ecmd = 'start {}'.format(os.path.join(hotkeys, cmd))
+            print 'ecmd:', ecmd
+            command(ecmd)
         else:
             print 'oops'
             return
@@ -184,7 +201,8 @@ class KeyListener:
 
     def onKey(self, event):
         self.event = event
-        if self.isKey(VK_SEMICOLON) and win32api.GetKeyState(win32con.VK_LCONTROL) & 0x8000:
+        if (self.isKey(VK_SEMICOLON) and
+                win32api.GetKeyState(win32con.VK_LCONTROL) & 0x8000):
             if self.isDown():
                 if self.window.isVisible():
                     self.window.clear()
@@ -197,7 +215,8 @@ class KeyListener:
                     height = desktop.geometry().height()
 
                     pos = self.window.pos()
-                    self.window.move(pos.x(), height - self.window.height() - 50)
+                    self.window.move(
+                        pos.x(), height - self.window.height() - 50)
         return True
 
     def isKey(self, key):
