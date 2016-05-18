@@ -40,16 +40,9 @@ def curDatetime(fmt=None):
     return t.strftime(fmt) if fmt else t
 
 def command(cmd):
-    # write cmd to a bat file
-    # so to tackle the explorer hiding problem
-    # (when `start some_folder.lnk` the second time, the folder window will
-    # be hidden)
-    # shell=True to supress the cmd prompt flashing
-    fname = '__.bat'
-    f = open(fname, 'w')
-    f.write('@' + cmd)
-    f.close()
-    subprocess.call(fname, shell=True)
+    # use os.system instead subprocess.call to evade
+    # the lnk folder hiding problem
+    os.system(cmd)
 
 class Widget(QWidget):
     def __init__(self, parent=None):
