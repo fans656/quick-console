@@ -1,24 +1,40 @@
 # coding: utf-8
 # quick console
-import os
-import re
-import threading
-import sys
-import time
-import subprocess
-import datetime
-from ctypes import pythonapi, c_void_p, py_object
+from screenshot import screenshot_timely_saver
 
 import pyHook
 import win32con
 import win32gui
 import win32api
 import win32clipboard
+from PIL import ImageGrab
 from PySide.QtGui import *
 from PySide.QtCore import *
 
+import time
+import os
+import re
+import threading
+import sys
+import time
+import subprocess
+from datetime import datetime
+from ctypes import pythonapi, c_void_p, py_object
+
+
 VK_SEMICOLON = 186
+VK_PRNTSCR = 44
+SCREENSHOTS_PATH = r'E:\Depot\Pictures\screen_capture'
+SCREENSHOTS_INTERVAL = 30 * 60  # 30 minutes
 hotkeys = 'D:/Private/Hotkeys'
+
+def save_screenshot():
+    time.sleep(0.1)
+    im = ImageGrab.grabclipboard()
+    ts = datetime.strftime(datetime.now(), '%Y%m%d%H%M%S')
+    fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
+    if im:
+        im.save(fpath, 'png')
 
 def copyToClipboard(s):
     win32clipboard.OpenClipboard()
@@ -36,7 +52,7 @@ def getTextFromClipboard():
     return text
 
 def curDatetime(fmt=None):
-    t = datetime.datetime.now()
+    t = datetime.now()
     return t.strftime(fmt) if fmt else t
 
 def command(cmd):
@@ -54,7 +70,7 @@ class Widget(QWidget):
         self.lastCmd = ''
         self.cmds = [
             '!yx', '!quit', 'dt', 'dh', 'cmd', 'av', 'put',
-            'rm'
+            'rm', 'mt', 'bs', 'ba'
         ]
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
         print 'cmds: '
@@ -130,6 +146,37 @@ class Widget(QWidget):
             if os.path.isfile(path):
                 path = os.path.dirname(path)
             command('start cmd /k cd /d {}'.format(path))
+        # open mintty
+        elif cmd == 'mt':
+            path = getTextFromClipboard()
+            try:
+                if not os.path.exists(path):
+                    raise Exception()
+                if os.path.isfile(path):
+                    path = os.path.dirname(path)
+                path = path.replace('\\', '/')
+                path = path.replace(':', '')
+                path = '"/cygdrive/{}"'.format(path)
+            except Exception:
+                path = '~'
+            print path
+            command(("mintty --title \"mintty\" /bin/bash -lc 'cd {};"
+                    + " exec bash'").format(path))
+        elif cmd == 'ba' or cmd == 'bs':
+            path = getTextFromClipboard()
+            try:
+                if not os.path.exists(path):
+                    raise Exception()
+                if os.path.isfile(path):
+                    path = os.path.dirname(path)
+                path = path.replace('\\', '/')
+                path = path.replace(':', '')
+                path = '"/cygdrive/{}"'.format(path)
+            except Exception:
+                path = '~'
+            print path
+            s = 'start bash -c \'cd {}; $SHELL\''.format(path)
+            command(s)
         # random music
         elif cmd == 'rm':
             command('start pythonw rand_music.py')
@@ -194,6 +241,7 @@ class KeyListener:
 
     def onKey(self, event):
         self.event = event
+        # Ctrl-; 呼出控制台
         if (self.isKey(VK_SEMICOLON) and
                 win32api.GetKeyState(win32con.VK_LCONTROL) & 0x8000):
             if self.isDown():
@@ -210,6 +258,9 @@ class KeyListener:
                     pos = self.window.pos()
                     self.window.move(
                         pos.x(), height - self.window.height() - 50)
+        # 按下 PrintScreen 时保存截屏到 E:\Depot\Pictures\screen_capture
+        if event.KeyID == VK_PRNTSCR:
+            threading.Thread(target=save_screenshot).start()
         return True
 
     def isKey(self, key):
@@ -221,7 +272,25 @@ class KeyListener:
     def isUp(self):
         return self.event.Message in (win32con.WM_KEYUP, win32con.WM_SYSKEYUP)
 
-app = QApplication(sys.argv)
-w = Widget()
-KeyListener(w).start()
-app.exec_()
+from multiprocessing import Process
+
+def f(cmd):
+    os.system(cmd)
+
+def run_task(cmd):
+    p = Process(target=f, args=(cmd,))
+    p.daemon = True
+    p.start()
+
+if __name__ == '__main__':
+    #run_task(r'pythonw D:\Source\Python\bridge\pc-watcher\main.py')
+
+    app = QApplication(sys.argv)
+    w = Widget()
+    KeyListener(w).start()
+    # 半小时截屏一次
+    screenshot_saver = threading.Thread(
+        target=screenshot_timely_saver,
+        args=(SCREENSHOTS_INTERVAL, SCREENSHOTS_PATH))
+    screenshot_saver.start()
+    app.exec_()

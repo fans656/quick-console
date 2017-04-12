@@ -3,7 +3,7 @@ import random
 import subprocess
 
 paths = [
-        "E:\Movie\AV",
+        "G:\Movie\AV",
         ]
 exts = [
     'mpg', 'vob', '3gp', 'wmv', 'flv', 'mkv',
