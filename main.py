@@ -31,14 +31,6 @@ hotkeys = 'D:/Private/Hotkeys'
 VK_SEMICOLON = 186
 VK_PRNTSCR = 44
 
-def save_screenshot():
-    time.sleep(0.1)
-    im = ImageGrab.grabclipboard()
-    ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
-    fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
-    if im:
-        im.save(fpath, 'png')
-
 def copyToClipboard(s):
     win32clipboard.OpenClipboard()
     win32clipboard.EmptyClipboard()
@@ -262,8 +254,12 @@ class KeyListener:
                     self.window.move(
                         pos.x(), height - self.window.height() - 50)
         # 按下 PrintScreen 时保存截屏到 E:\Depot\Pictures\screen_capture
-        if event.KeyID == VK_PRNTSCR:
-            threading.Thread(target=save_screenshot).start()
+        if event.KeyID == VK_PRNTSCR and self.isDown():
+            im = ImageGrab.grabclipboard()
+            ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
+            fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
+            if im:
+                im.save(fpath, 'png')
         return True
 
     def isKey(self, key):
@@ -295,7 +291,7 @@ if __name__ == '__main__':
     screenshot_saver = threading.Thread(
         target=screenshot_timely_saver,
         args=(SCREENSHOTS_INTERVAL, SCREENSHOTS_TIMELY_PATH))
-    screenshot_saver.daemon = True # quit when main thread quited
+    screenshot_saver.daemon = True # quit when main thread is quited
     screenshot_saver.start()
 
     app.exec_()
