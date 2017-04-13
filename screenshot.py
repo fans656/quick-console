@@ -1,3 +1,5 @@
+import config
+
 from PIL import ImageGrab
 
 import os
@@ -10,7 +12,7 @@ def screenshot_timely_saver(interval, dirpath):
     '''
     while True:
         im = ImageGrab.grab()
-        ts = datetime.strftime(datetime.now(), '%Y%m%d%H%M%S')
+        ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
         fpath = os.path.join(dirpath, ts + '.png')
         im.save(fpath, 'png')
         time.sleep(interval)

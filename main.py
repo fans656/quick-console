@@ -1,6 +1,7 @@
 # coding: utf-8
 # quick console
 from screenshot import screenshot_timely_saver
+import config
 
 import pyHook
 import win32con
@@ -22,16 +23,18 @@ from datetime import datetime
 from ctypes import pythonapi, c_void_p, py_object
 
 
-VK_SEMICOLON = 186
-VK_PRNTSCR = 44
 SCREENSHOTS_PATH = r'E:\Depot\Pictures\screen_capture'
+SCREENSHOTS_TIMELY_PATH = r'E:\Depot\Pictures\screen_capture\timely'
 SCREENSHOTS_INTERVAL = 30 * 60  # 30 minutes
 hotkeys = 'D:/Private/Hotkeys'
+
+VK_SEMICOLON = 186
+VK_PRNTSCR = 44
 
 def save_screenshot():
     time.sleep(0.1)
     im = ImageGrab.grabclipboard()
-    ts = datetime.strftime(datetime.now(), '%Y%m%d%H%M%S')
+    ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
     fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
     if im:
         im.save(fpath, 'png')
@@ -291,6 +294,8 @@ if __name__ == '__main__':
     # 半小时截屏一次
     screenshot_saver = threading.Thread(
         target=screenshot_timely_saver,
-        args=(SCREENSHOTS_INTERVAL, SCREENSHOTS_PATH))
+        args=(SCREENSHOTS_INTERVAL, SCREENSHOTS_TIMELY_PATH))
+    screenshot_saver.daemon = True # quit when main thread quited
     screenshot_saver.start()
+
     app.exec_()
