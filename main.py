@@ -23,10 +23,10 @@ from datetime import datetime
 from ctypes import pythonapi, c_void_p, py_object
 
 
-SCREENSHOTS_PATH = r'E:\Depot\Pictures\screen_capture'
-SCREENSHOTS_TIMELY_PATH = r'E:\Depot\Pictures\screen_capture\timely'
+SCREENSHOTS_PATH = r'C:\Data\Pictures\screen-capture'
+SCREENSHOTS_TIMELY_PATH = r'C:\Data\Pictures\screen-capture\timely'
 SCREENSHOTS_INTERVAL = 30 * 60  # 30 minutes
-hotkeys = 'D:/Private/Hotkeys'
+hotkeys = r'C:\Hotkeys'
 
 VK_SEMICOLON = 186
 VK_PRNTSCR = 44
@@ -255,7 +255,7 @@ class KeyListener:
                         pos.x(), height - self.window.height() - 50)
         # 按下 PrintScreen 时保存截屏到 E:\Depot\Pictures\screen_capture
         if event.KeyID == VK_PRNTSCR and self.isDown():
-            im = ImageGrab.grabclipboard()
+            im = ImageGrab.grab()
             ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
             fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
             if im:
