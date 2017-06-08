@@ -1,17 +1,5 @@
 # coding: utf-8
 # quick console
-from screenshot import screenshot_timely_saver
-import config
-
-import pyHook
-import win32con
-import win32gui
-import win32api
-import win32clipboard
-from PIL import ImageGrab
-from PySide.QtGui import *
-from PySide.QtCore import *
-
 import time
 import os
 import re
@@ -22,6 +10,18 @@ import subprocess
 from datetime import datetime
 from ctypes import pythonapi, c_void_p, py_object
 
+import pyHook
+import win32con
+import win32gui
+import win32api
+import win32clipboard
+from PIL import ImageGrab
+from PySide.QtGui import *
+from PySide.QtCore import *
+
+from screenshot import screenshot_timely_saver
+from window import Windows
+import config
 
 SCREENSHOTS_PATH = r'C:\Data\Pictures\screen-capture'
 SCREENSHOTS_TIMELY_PATH = r'C:\Data\Pictures\screen-capture\timely'
@@ -65,7 +65,7 @@ class Widget(QWidget):
         self.lastCmd = ''
         self.cmds = [
             '!yx', '!quit', 'dt', 'dh', 'cmd', 'av', 'put',
-            'rm', 'mt', 'bs', 'ba'
+            'rm', 'mt', 'bs', 'ba', 'te',
         ]
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
         print 'cmds: '
@@ -140,7 +140,19 @@ class Widget(QWidget):
                 path = '.'
             if os.path.isfile(path):
                 path = os.path.dirname(path)
-            command('start cmd /k cd /d {}'.format(path))
+            command('start cmd.exe /k cd /d {}'.format(path))
+        elif cmd == 'te':
+            cur = Windows().current
+            if not cur or not cur.path == r'C:\Windows\explorer.exe':
+                return
+            path = getTextFromClipboard()
+            if not os.path.exists(path):
+                print 'path not exists'
+                return
+            if os.path.isfile(path):
+                print 'is not directory'
+                return
+            command(u'start gvim {}'.format(os.path.join(path, '0txt.txt')))
         # open mintty
         elif cmd == 'mt':
             path = getTextFromClipboard()
