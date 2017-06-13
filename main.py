@@ -21,12 +21,13 @@ from PySide.QtCore import *
 
 from screenshot import screenshot_timely_saver
 from window import Windows
+from keyboard import Keyboard
 import config
 
-SCREENSHOTS_PATH = r'C:\Data\Pictures\screen-capture'
-SCREENSHOTS_TIMELY_PATH = r'C:\Data\Pictures\screen-capture\timely'
+SCREENSHOTS_PATH = r'D:\Depot\Pictures\screen_capture'
+SCREENSHOTS_TIMELY_PATH = r'D:\Depot\Pictures\screen_capture\timely'
 SCREENSHOTS_INTERVAL = 30 * 60  # 30 minutes
-hotkeys = r'C:\Hotkeys'
+hotkeys = r'D:\Private\Hotkeys'
 
 VK_SEMICOLON = 186
 VK_PRNTSCR = 44
@@ -70,6 +71,31 @@ class Widget(QWidget):
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
         print 'cmds: '
         print self.cmds
+        self.keyboard = Keyboard()
+        self.keyboard.on('ctrl ;', self.toggle_active)
+        self.keyboard.on('print', self.screenshot)
+
+    def toggle_active(self):
+        if self.isVisible():
+            self.clear()
+        else:
+            self.show()
+            self.setWindowState(Qt.WindowMinimized)
+            self.setWindowState(Qt.WindowActive)
+
+            desktop = QDesktopWidget()
+            height = desktop.geometry().height()
+
+            pos = self.pos()
+            self.move(
+                pos.x(), height - self.height() - 50)
+
+    def screenshot(self):
+        im = ImageGrab.grab()
+        ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
+        fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
+        if im:
+            im.save(fpath, 'png')
 
     def keyPressEvent(self, event):
         ch = event.text()
@@ -237,51 +263,51 @@ class Widget(QWidget):
         p.setPen(pen)
         p.drawText(self.rect(), Qt.AlignCenter, self.text())
 
-class KeyListener:
-    def __init__(self, window):
-        self.window = window
-
-    def start(self):
-        self.hm = pyHook.HookManager()
-        self.hm.KeyAll = self.onKey
-        self.hm.HookKeyboard()
-
-    def onKey(self, event):
-        self.event = event
-        # Ctrl-; 呼出控制台
-        if (self.isKey(VK_SEMICOLON) and
-                win32api.GetKeyState(win32con.VK_LCONTROL) & 0x8000):
-            if self.isDown():
-                if self.window.isVisible():
-                    self.window.clear()
-                else:
-                    self.window.show()
-                    self.window.setWindowState(Qt.WindowMinimized)
-                    self.window.setWindowState(Qt.WindowActive)
-
-                    desktop = QDesktopWidget()
-                    height = desktop.geometry().height()
-
-                    pos = self.window.pos()
-                    self.window.move(
-                        pos.x(), height - self.window.height() - 50)
-        # 按下 PrintScreen 时保存截屏到 E:\Depot\Pictures\screen_capture
-        if event.KeyID == VK_PRNTSCR and self.isDown():
-            im = ImageGrab.grab()
-            ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
-            fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
-            if im:
-                im.save(fpath, 'png')
-        return True
-
-    def isKey(self, key):
-        return self.event.KeyID == key
-
-    def isDown(self):
-        return self.event.Message in (win32con.WM_KEYDOWN, win32con.WM_SYSKEYDOWN)
-
-    def isUp(self):
-        return self.event.Message in (win32con.WM_KEYUP, win32con.WM_SYSKEYUP)
+#class KeyListener:
+#    def __init__(self, window):
+#        self.window = window
+#
+#    def start(self):
+#        self.hm = pyHook.HookManager()
+#        self.hm.KeyAll = self.onKey
+#        self.hm.HookKeyboard()
+#
+#    def onKey(self, event):
+#        self.event = event
+#        # Ctrl-; 呼出控制台
+#        if (self.isKey(VK_SEMICOLON) and
+#                win32api.GetKeyState(win32con.VK_LCONTROL) & 0x8000):
+#            if self.isDown():
+#                if self.window.isVisible():
+#                    self.window.clear()
+#                else:
+#                    self.window.show()
+#                    self.window.setWindowState(Qt.WindowMinimized)
+#                    self.window.setWindowState(Qt.WindowActive)
+#
+#                    desktop = QDesktopWidget()
+#                    height = desktop.geometry().height()
+#
+#                    pos = self.window.pos()
+#                    self.window.move(
+#                        pos.x(), height - self.window.height() - 50)
+#        # 按下 PrintScreen 时保存截屏到 E:\Depot\Pictures\screen_capture
+#        if event.KeyID == VK_PRNTSCR and self.isDown():
+#            im = ImageGrab.grab()
+#            ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
+#            fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
+#            if im:
+#                im.save(fpath, 'png')
+#        return True
+#
+#    def isKey(self, key):
+#        return self.event.KeyID == key
+#
+#    def isDown(self):
+#        return self.event.Message in (win32con.WM_KEYDOWN, win32con.WM_SYSKEYDOWN)
+#
+#    def isUp(self):
+#        return self.event.Message in (win32con.WM_KEYUP, win32con.WM_SYSKEYUP)
 
 from multiprocessing import Process
 
@@ -298,7 +324,7 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     w = Widget()
-    KeyListener(w).start()
+    #KeyListener(w).start()
     # 半小时截屏一次
     screenshot_saver = threading.Thread(
         target=screenshot_timely_saver,
