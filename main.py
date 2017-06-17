@@ -306,4 +306,6 @@ if __name__ == '__main__':
     screenshot_saver.daemon = True # quit when main thread is quited
     screenshot_saver.start()
 
+    subprocess.Popen(['pythonw', 'localserver.py'])
+
     app.exec_()
