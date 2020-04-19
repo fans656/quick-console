@@ -3,12 +3,12 @@ import random
 import subprocess
 
 paths = [
-        "D:\Movie\AV",
-        "E:\Movie\AV",
+        "E:\Movie\AV\yoo",
+        "D:\Movie\AV\yoo",
         ]
 exts = [
     'mpg', 'vob', '3gp', 'wmv', 'flv', 'mkv',
-    'mp4', 'rmvb', 'avi', 'm2ts', 'rm'
+    'mp4', 'rmvb', 'avi', 'm2ts', 'rm', 'ts',
 ]
 
 def is_movie(f):

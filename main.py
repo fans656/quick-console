@@ -7,6 +7,7 @@ import threading
 import sys
 import time
 import subprocess
+import multiprocessing
 from datetime import datetime
 from ctypes import pythonapi, c_void_p, py_object
 
@@ -22,12 +23,13 @@ from PySide.QtCore import *
 from screenshot import screenshot_timely_saver
 from window import Windows
 from keyboard import Keyboard
+import fme_local
 import config
 
-SCREENSHOTS_PATH = r'D:\Depot\Pictures\screen_capture'
-SCREENSHOTS_TIMELY_PATH = r'D:\Depot\Pictures\screen_capture\timely'
+SCREENSHOTS_PATH = r'C:\Data\Pictures\screen-capture'
+SCREENSHOTS_TIMELY_PATH = r'C:\Data\Pictures\screen-capture\timely'
 SCREENSHOTS_INTERVAL = 30 * 60  # 30 minutes
-hotkeys = r'D:\Private\Hotkeys'
+hotkeys = r'C:\Hotkeys'
 
 VK_SEMICOLON = 186
 VK_PRNTSCR = 44
@@ -65,12 +67,12 @@ class Widget(QWidget):
         self.cmd = []
         self.lastCmd = ''
         self.cmds = [
-            '!yx', '!quit', 'dt', 'dh', 'cmd', 'av', 'put',
+            '!yx', '!quit', 'dt', 'dh', 'cmd', 'av', 'mav', 'yav', 'put',
             'rm', 'mt', 'bs', 'ba', 'te',
         ]
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
-        print 'cmds: '
-        print self.cmds
+        print('cmds: ')
+        print(self.cmds)
         self.keyboard = Keyboard()
         self.keyboard.on('ctrl ;', self.toggle_active)
         self.keyboard.on('print', self.screenshot)
@@ -123,8 +125,8 @@ class Widget(QWidget):
             if self.matched():
                 self.execute()
             else:
-                print 'no match'
-        print 'current cmd: {}'.format(u''.join(self.cmd))
+                print('no match')
+        print('current cmd: {}'.format(u''.join(self.cmd)))
 
     def matched(self):
         matches = []
@@ -173,10 +175,10 @@ class Widget(QWidget):
                 return
             path = getTextFromClipboard()
             if not os.path.exists(path):
-                print 'path not exists'
+                print('path not exists')
                 return
             if os.path.isfile(path):
-                print 'is not directory'
+                print('is not directory')
                 return
             command(u'start gvim {}'.format(os.path.join(path, '0txt.txt')))
         # open mintty
@@ -192,7 +194,7 @@ class Widget(QWidget):
                 path = '"/cygdrive/{}"'.format(path)
             except Exception:
                 path = '~'
-            print path
+            print(path)
             command(("mintty --title \"mintty\" /bin/bash -lc 'cd {};"
                     + " exec bash'").format(path))
         elif cmd == 'ba' or cmd == 'bs':
@@ -207,7 +209,7 @@ class Widget(QWidget):
                 path = '"/cygdrive/{}"'.format(path)
             except Exception:
                 path = '~'
-            print path
+            print(path)
             s = 'start bash -c \'cd {}; $SHELL\''.format(path)
             command(s)
         # random music
@@ -216,6 +218,10 @@ class Widget(QWidget):
         # secret
         elif cmd == 'av':
             command('start pythonw rand_movie.py')
+        elif cmd == 'mav':
+            command('start pythonw rand_mmd.py')
+        elif cmd == 'yav':
+            command('start pythonw rand_av.py')
         # put foreground window to right bottom
         elif cmd == 'put':
             import win32gui
@@ -232,13 +238,13 @@ class Widget(QWidget):
             exit()
         # execute in hotkeys directory
         elif cmd in self.cmds:
-            print 'special cmds: ', hotkeys
-            print 'cmd:', cmd
+            print('special cmds: ', hotkeys)
+            print('cmd:', cmd)
             ecmd = 'start {}'.format(os.path.join(hotkeys, cmd))
-            print 'ecmd:', ecmd
+            print('ecmd:', ecmd)
             command(ecmd)
         else:
-            print 'oops'
+            print('oops')
             return
         self.clear(cmd)
 
@@ -263,65 +269,8 @@ class Widget(QWidget):
         p.setPen(pen)
         p.drawText(self.rect(), Qt.AlignCenter, self.text())
 
-#class KeyListener:
-#    def __init__(self, window):
-#        self.window = window
-#
-#    def start(self):
-#        self.hm = pyHook.HookManager()
-#        self.hm.KeyAll = self.onKey
-#        self.hm.HookKeyboard()
-#
-#    def onKey(self, event):
-#        self.event = event
-#        # Ctrl-; 呼出控制台
-#        if (self.isKey(VK_SEMICOLON) and
-#                win32api.GetKeyState(win32con.VK_LCONTROL) & 0x8000):
-#            if self.isDown():
-#                if self.window.isVisible():
-#                    self.window.clear()
-#                else:
-#                    self.window.show()
-#                    self.window.setWindowState(Qt.WindowMinimized)
-#                    self.window.setWindowState(Qt.WindowActive)
-#
-#                    desktop = QDesktopWidget()
-#                    height = desktop.geometry().height()
-#
-#                    pos = self.window.pos()
-#                    self.window.move(
-#                        pos.x(), height - self.window.height() - 50)
-#        # 按下 PrintScreen 时保存截屏到 E:\Depot\Pictures\screen_capture
-#        if event.KeyID == VK_PRNTSCR and self.isDown():
-#            im = ImageGrab.grab()
-#            ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
-#            fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
-#            if im:
-#                im.save(fpath, 'png')
-#        return True
-#
-#    def isKey(self, key):
-#        return self.event.KeyID == key
-#
-#    def isDown(self):
-#        return self.event.Message in (win32con.WM_KEYDOWN, win32con.WM_SYSKEYDOWN)
-#
-#    def isUp(self):
-#        return self.event.Message in (win32con.WM_KEYUP, win32con.WM_SYSKEYUP)
-
-from multiprocessing import Process
-
-def f(cmd):
-    os.system(cmd)
-
-def run_task(cmd):
-    p = Process(target=f, args=(cmd,))
-    p.daemon = True
-    p.start()
 
 if __name__ == '__main__':
-    #run_task(r'pythonw D:\Source\Python\bridge\pc-watcher\main.py')
-
     app = QApplication(sys.argv)
     w = Widget()
     #KeyListener(w).start()
@@ -331,7 +280,5 @@ if __name__ == '__main__':
         args=(SCREENSHOTS_INTERVAL, SCREENSHOTS_TIMELY_PATH))
     screenshot_saver.daemon = True # quit when main thread is quited
     screenshot_saver.start()
-
-    subprocess.Popen(['pythonw', 'localserver.py'])
 
     app.exec_()
