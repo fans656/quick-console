@@ -10,6 +10,7 @@ import subprocess
 import multiprocessing
 from datetime import datetime
 from ctypes import pythonapi, c_void_p, py_object
+import traceback
 
 import pyHook
 import win32con
@@ -25,6 +26,8 @@ from window import Windows
 from keyboard import Keyboard
 import fme_local
 import config
+from clipboard import Clipboard
+from logger import logger
 
 SCREENSHOTS_PATH = r'C:\Data\Pictures\screen-capture'
 SCREENSHOTS_TIMELY_PATH = r'C:\Data\Pictures\screen-capture\timely'
@@ -67,12 +70,12 @@ class Widget(QWidget):
         self.cmd = []
         self.lastCmd = ''
         self.cmds = [
-            '!yx', '!quit', 'dt', 'dh', 'cmd', 'av', 'mav', 'yav', 'put',
+            '!quit', 'dt', 'dh', 'cmd', 'av', 'mav', 'yav', 'put',
             'rm', 'mt', 'bs', 'ba', 'te',
+            'cl',
         ]
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
-        print('cmds: ')
-        print(self.cmds)
+        logger.info('cmds: {}'.format(self.cmds))
         self.keyboard = Keyboard()
         self.keyboard.on('ctrl ;', self.toggle_active)
         self.keyboard.on('print', self.screenshot)
@@ -152,11 +155,9 @@ class Widget(QWidget):
         cmd = self.text()
         if not cmd:
             cmd = self.lastCmd
-        # yinxiang
-        if cmd == 'yx':
-            command('start chrome "https://app.yinxiang.com/Home.action"')
+        logger.info('executing: {}'.format(cmd))
         # date time in filename format
-        elif cmd == 'dt':
+        if cmd == 'dt':
             copyToClipboard(curDatetime('%Y%m%d%H%M%S'))
         # date time in readable format
         elif cmd == 'dh':
@@ -233,17 +234,32 @@ class Widget(QWidget):
             h = b - y
             x, y = right - w, bottom - h
             win32gui.MoveWindow(hwnd, x, y, w, h, True)
+        elif cmd == 'cl':
+            logger.info('cl start')
+            try:
+                logger.info('cl get_image')
+                logger.info(repr(Clipboard))
+                fname = Clipboard.get_image()
+                if fname:
+                    logger.info('cl: ' + fname)
+                    copyToClipboard(fname)
+                else:
+                    logger.info('cl nothing')
+            except:
+                logger.info(traceback.format_exc())
+            logger.info('cl end')
         # quit
         elif cmd == 'quit':
             exit()
         # execute in hotkeys directory
         elif cmd in self.cmds:
-            print('special cmds: ', hotkeys)
-            print('cmd:', cmd)
+            logger.info('special cmds: {}'.format(hotkeys))
+            logger.info('cmd: {}'.format(cmd))
             ecmd = 'start {}'.format(os.path.join(hotkeys, cmd))
-            print('ecmd:', ecmd)
+            logger.info('ecmd: {}'.format(ecmd))
             command(ecmd)
         else:
+            logger.error('unknown command {}'.format(cmd))
             print('oops')
             return
         self.clear(cmd)
@@ -273,7 +289,7 @@ class Widget(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = Widget()
-    #KeyListener(w).start()
+
     # 半小时截屏一次
     screenshot_saver = threading.Thread(
         target=screenshot_timely_saver,
