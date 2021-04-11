@@ -75,4 +75,4 @@ class Clipboard:
                 fname = now.strftime('%Y-%m-%d_%H-%M-%S_%f.png')
                 path = 'C:\\\\.fme\\.img\\' + fname
                 img.save(path)
-                return fname
+                return '/cl/' + fname

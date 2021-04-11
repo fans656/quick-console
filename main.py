@@ -12,6 +12,7 @@ from datetime import datetime
 from ctypes import pythonapi, c_void_p, py_object
 import traceback
 
+# https://stackoverflow.com/questions/35202087/pyhook-on-python-3-5
 import pyHook
 import win32con
 import win32gui
@@ -286,7 +287,20 @@ class Widget(QWidget):
         p.drawText(self.rect(), Qt.AlignCenter, self.text())
 
 
+def update_wsl_host():
+    out = subprocess.check_output('wsl.exe ifconfig', shell = True)
+    lines = map(str.strip, out.decode().splitlines())
+    line = next(l for l in lines if l.startswith('inet 172'))
+    ip = line.split(' ')[1]
+    print(repr(ip))
+
+
 if __name__ == '__main__':
+    try:
+        update_wsl_host()
+    except:
+        logger.warning(traceback.format_exc())
+
     app = QApplication(sys.argv)
     w = Widget()
 
