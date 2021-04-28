@@ -29,6 +29,7 @@ import fme_local
 import config
 from clipboard import Clipboard
 from logger import logger
+from run_tmp import run_tmp_script
 
 SCREENSHOTS_PATH = r'C:\Data\Pictures\screen-capture'
 SCREENSHOTS_TIMELY_PATH = r'C:\Data\Pictures\screen-capture\timely'
@@ -73,7 +74,7 @@ class Widget(QWidget):
         self.cmds = [
             '!quit', 'dt', 'dh', 'cmd', 'av', 'mav', 'yav', 'put',
             'rm', 'mt', 'bs', 'ba', 'te',
-            'cl',
+            'cl', 'tm',
         ]
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
         logger.info('cmds: {}'.format(self.cmds))
@@ -249,6 +250,8 @@ class Widget(QWidget):
             except:
                 logger.info(traceback.format_exc())
             logger.info('cl end')
+        elif cmd == 'tm':
+            run_tmp_script()
         # quit
         elif cmd == 'quit':
             exit()
