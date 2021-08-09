@@ -31,10 +31,10 @@ from clipboard import Clipboard
 from logger import logger
 from run_tmp import run_tmp_script
 
-SCREENSHOTS_PATH = r'C:\Data\Pictures\screen-capture'
-SCREENSHOTS_TIMELY_PATH = r'C:\Data\Pictures\screen-capture\timely'
+SCREENSHOTS_PATH = r'C:\data\pictures\screen-capture'
+SCREENSHOTS_TIMELY_PATH = r'C:\data\pictures\screen-capture\timely'
 SCREENSHOTS_INTERVAL = 30 * 60  # 30 minutes
-hotkeys = r'C:\Hotkeys'
+hotkeys = 'C:/apps/scripts'
 
 VK_SEMICOLON = 186
 VK_PRNTSCR = 44

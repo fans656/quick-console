@@ -86,20 +86,23 @@ class RawKeyEvent(object):
         self.Message = rk.Message
 
 def proc(onkey, hwnd, msg, wparam, lparam):
-    if msg == WM_INPUT:
-        hRawInput = lparam
-        ri = RAWINPUT()
-        cbSize = wintypes.UINT(ctypes.sizeof(ri))
-        r = user32.GetRawInputData(
-            hRawInput,
-            RID_INPUT,
-            ctypes.byref(ri),
-            ctypes.byref(cbSize),
-            ctypes.sizeof(RAWINPUTHEADER))
-        rk = ri.keyboard
-        ev = RawKeyEvent(ri.keyboard)
-        onkey(ev)
-    return win32gui.DefWindowProc(hwnd, msg, wparam, lparam)
+    try:
+        if msg == WM_INPUT:
+            hRawInput = lparam
+            ri = RAWINPUT()
+            cbSize = wintypes.UINT(ctypes.sizeof(ri))
+            r = user32.GetRawInputData(
+                hRawInput,
+                RID_INPUT,
+                ctypes.byref(ri),
+                ctypes.byref(cbSize),
+                ctypes.sizeof(RAWINPUTHEADER))
+            rk = ri.keyboard
+            ev = RawKeyEvent(ri.keyboard)
+            onkey(ev)
+        return win32gui.DefWindowProc(hwnd, msg, wparam, lparam)
+    except KeyboardInterrupt:
+        exit(0)
 
 def register_keyboard(onkey):
     wc = win32gui.WNDCLASS()
@@ -129,4 +132,7 @@ if __name__ == '__main__':
         print ev.Key, ev.KeyID
 
     register_keyboard(onkey)
-    win32gui.PumpMessages()
+    try:
+        win32gui.PumpMessages()
+    except KeyboardInterrupt:
+        exit(0)
