@@ -73,6 +73,6 @@ class Clipboard:
                 img = ImageGrab.grabclipboard()
                 now = datetime.datetime.now()
                 fname = now.strftime('%Y-%m-%d_%H-%M-%S_%f.png')
-                path = 'C:\\\\.fme\\.img\\' + fname
+                path = 'D:\\\\.fme\\data\\files\img\\' + fname
                 img.save(path)
-                return '/cl/' + fname
+                return '`eno.img /f/img/' + fname + '`'

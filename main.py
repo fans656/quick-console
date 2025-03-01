@@ -98,6 +98,7 @@ class Widget(QWidget):
                 pos.x(), height - self.height() - 50)
 
     def screenshot(self):
+        logger.info('screenshot')
         im = ImageGrab.grab()
         ts = datetime.strftime(datetime.now(), config.FNAME_TIMESTAMP_FORMAT)
         fpath = os.path.join(SCREENSHOTS_PATH, ts + '.png')
