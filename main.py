@@ -75,6 +75,7 @@ class Widget(QWidget):
             '!quit', 'dt', 'dh', 'cmd', 'av', 'mav', 'yav', 'put',
             'rm', 'mt', 'bs', 'ba', 'te',
             'cl', 'tm',
+            'se', 'si',
         ]
         self.cmds += [f.split('.')[0] for f in os.listdir(hotkeys)]
         logger.info('cmds: {}'.format(self.cmds))
@@ -162,6 +163,12 @@ class Widget(QWidget):
         # date time in filename format
         if cmd == 'dt':
             copyToClipboard(curDatetime('%Y%m%d%H%M%S'))
+        # switch to external screen
+        elif cmd == 'se':
+            subprocess.check_output('displayswitch.exe /external', shell=True)
+        # switch to internal screen
+        elif cmd == 'si':
+            subprocess.check_output('displayswitch.exe /internal', shell=True)
         # date time in readable format
         elif cmd == 'dh':
             copyToClipboard(curDatetime('%Y-%m-%d %H:%M:%S'))
